@@ -1,5 +1,5 @@
 import { PostsEntity } from 'src/posts/posts.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 export class UserEntity {
@@ -12,6 +12,7 @@ export class UserEntity {
   @Column()
   password: string;
 
-  // @OneToMany(()=> PostsEntity,post=>post.user)
-  // posts: PostsEntity[];
+  @OneToMany((_)=> PostsEntity, posts=>posts.user,{eager: true})
+  // @JoinTable()
+  posts: PostsEntity[]
 }

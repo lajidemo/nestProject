@@ -1,19 +1,22 @@
+import { UserEntity } from 'src/user/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreatePostsDto, SearchPostDto } from './posts.dto';
 import { PostsEntity } from './posts.entity';
 
 @EntityRepository(PostsEntity)
 export class PostsRepository extends Repository<PostsEntity> {
-  async createPost(createPostsDto: CreatePostsDto): Promise<PostsEntity> {
+  async createPost(createPostsDto: CreatePostsDto, user: UserEntity): Promise<PostsEntity> {
     const post = this.create({
       ...createPostsDto,
       createTime: new Date().toLocaleString(),
+      user
     });
+    console.log('post===',post)
     await this.save(post);
     return post;
   }
 
-  async searchPost(searchPostDto: SearchPostDto): Promise<PostsEntity[]> {
+  async searchPost(searchPostDto: SearchPostDto,user: UserEntity): Promise<PostsEntity[]> {
     // 精准查询
     // const res = await this.find(searchPostDto)
     // const res = await this.find({select: ['title']})
@@ -27,17 +30,18 @@ export class PostsRepository extends Repository<PostsEntity> {
     // 模糊查询
     const { title, content } = searchPostDto;
     const query = this.createQueryBuilder('post');
+    query.where({user})
     // where 表达式
-    if(title){
-      query.where(
-        'post.title LIKE :title', {title: `%${title}%`}
-      )
-    }
-    if(content){
-      query.orWhere(
-        'post.content LIKE :content', {content: `%${content}%`}
-      )
-    }
+    // if(title){
+    //   query.where(
+    //     'post.title LIKE :title', {title: `%${title}%`}
+    //   )
+    // }
+    // if(content){
+    //   query.orWhere(
+    //     'post.content LIKE :content', {content: `%${content}%`}
+    //   )
+    // }
     if (title || content) {
       query
         .where('post.title LIKE :title', { title: `%${title}%` })

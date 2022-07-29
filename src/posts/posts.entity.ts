@@ -1,5 +1,6 @@
+import { Exclude } from "class-transformer";
 import { UserEntity } from "src/user/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('posts')
 export class PostsEntity {
@@ -18,6 +19,7 @@ export class PostsEntity {
   @Column()
   updateTime: string;
   
-  // @ManyToOne(()=> UserEntity, user=> user.posts)
-  // user: UserEntity;
+  @ManyToOne((_)=>UserEntity, user=>user.posts,{eager:false})
+  @Exclude({toPlainOnly: true})
+  user: UserEntity
 }
