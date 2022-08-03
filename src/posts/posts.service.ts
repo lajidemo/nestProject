@@ -18,7 +18,7 @@ export class PostsService {
   }
 
   async getPostsById(id: number): Promise<PostsEntity>{
-    const post = await this.postsRepository.findOne(id)
+    const post = await this.postsRepository.findOneBy({id})
     if(!post) {
       throw new NotFoundException('未找到')
     }

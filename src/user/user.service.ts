@@ -25,7 +25,7 @@ export class UserService {
   }
   async signIn(userCreateDto: UserCreateDto): Promise<{accessToken: string}> {
     const { userName, password } = userCreateDto
-    const user = await this.userRepository.findOne({userName})
+    const user = await this.userRepository.findOneBy({userName})
     if(user && await (bcrypt.compare(password, user.password))){
       // 生成 token
       const payload = {userName}
